@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% set public = public|default(0) %}
+
+{% block body %}
+    <img alt="idealista" src="https://st1.idealista.com/static/common/img/idealista.svg" title="idealista">
+    <h1>ANUNCIOS IDEALISTA</h1>
+    {% for ad in list %}
+        {% if not public or (public and ad['ad'].getScore() >= 40) %}
+            <div class="ad">
+                <h2>ANUNCIO</h2>
+                <p class="desc">Descripción: </p>
+                <p> {{ ad['ad'].getDescription() }}</p>
+                <p class="desc">Tipo:</p>
+                <p>{{ ad['ad'].getTypology() }}</p>
+                {% for picture in ad["pictures"] %}
+                    <img src="{{ picture.getUrl() }}" alt="IDEALISTA">
+                {% endfor %}
+                {% if ad['ad'].getHouseSize() %}
+                    <p class="desc">Tamaño vivienda:</p>
+                    <p>{{ ad['ad'].getHouseSize() }}</p>
+                {% endif %}
+                {% if ad['ad'].getGardenSize() %}
+                    <p class="desc">Tamaño jardín:</p>
+                    <p>{{ ad['ad'].getGardenSize() }}</p>
+                {% endif %}
+                {% if not public %}
+                    <p class="desc">Puntuación:</p>
+                    <p>{{ ad['ad'].getScore() }}</p>
+                    {% if ad['ad'].getIrrelevantSince()  %}
+                        <p class="desc">Irrelevante desde:</p>
+                        <p>{{ ad['ad'].getIrrelevantSince()|date("d/m/Y") }}</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <p>--------------------------------</p>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
